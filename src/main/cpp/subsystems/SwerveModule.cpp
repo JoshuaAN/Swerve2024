@@ -1,6 +1,6 @@
 // Copyright (c) FRC Team 122. All Rights Reserved.
 
-#include "Subsystems/SwerveModule.h"
+#include "Subsystems/SwerveModule.hpp"
 
 #include <ctre/phoenix6/configs/Configs.hpp>
 #include <ctre/phoenix6/controls/PositionVoltage.hpp>
@@ -13,7 +13,7 @@
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <units/angle.h>
 
-#include "Constants.h"
+#include "Constants.hpp"
 
 using namespace ctre::phoenix6;
 using namespace ModuleConstants;

@@ -10,7 +10,7 @@
 #include <frc/Filesystem.h>
 #include <wpi/json.h>
 
-#include "util/NKTrajectory.h"
+#include "util/NKTrajectory.hpp"
 
 class NKTrajectoryManager {
 public:

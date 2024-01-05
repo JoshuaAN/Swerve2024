@@ -17,7 +17,7 @@
 #include <units/time.h>
 #include <units/velocity.h>
 
-#include "SDSModuleType.h"
+#include "SDSModuleType.hpp"
 
 namespace ElectricalConstants {
 

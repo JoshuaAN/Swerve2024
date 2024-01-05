@@ -7,9 +7,9 @@
 #include <frc2/command/Command.h>
 #include <frc2/command/CommandHelper.h>
 
-#include "Constants.h"
-#include "Subsystems/SwerveDrive.h"
-#include "Subsystems/SwerveModule.h"
+#include "Constants.hpp"
+#include "Subsystems/SwerveDrive.hpp"
+#include "Subsystems/SwerveModule.hpp"
 
 /**
  * An example command.

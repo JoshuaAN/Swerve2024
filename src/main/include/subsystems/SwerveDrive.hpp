@@ -22,8 +22,8 @@
 #include <networktables/NetworkTableInstance.h>
 #include <wpi/array.h>
 
-#include "Constants.h"
-#include "SwerveModule.h"
+#include "Constants.hpp"
+#include "SwerveModule.hpp"
 
 class SwerveDrive : public frc2::SubsystemBase {
 public:

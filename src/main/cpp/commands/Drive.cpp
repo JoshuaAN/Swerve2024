@@ -1,6 +1,6 @@
 // Copyright (c) FRC Team 122. All Rights Reserved.
 
-#include "commands/Drive.h"
+#include "commands/Drive.hpp"
 
 Drive::Drive(SwerveDrive *i_swerve, std::function<double()> i_x,
              std::function<double()> i_y, std::function<double()> i_rot)

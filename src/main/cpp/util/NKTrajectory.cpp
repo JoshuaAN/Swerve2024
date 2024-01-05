@@ -1,6 +1,6 @@
 // Copyright (c) FRC Team 122. All Rights Reserved.
 
-#include "util/NKTrajectory.h"
+#include "util/NKTrajectory.hpp"
 
 #include <algorithm>
 #include <vector>

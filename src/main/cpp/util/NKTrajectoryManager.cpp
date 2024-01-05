@@ -2,7 +2,7 @@
 
 // Copyright (c) FRC Team 2363. All Rights Reserved.
 
-#include "util/NKTrajectoryManager.h"
+#include "util/NKTrajectoryManager.hpp"
 
 #include <filesystem>
 #include <fstream>
@@ -16,7 +16,7 @@
 #include <frc/Filesystem.h>
 #include <wpi/json.h>
 
-#include "util/NKTrajectory.h"
+#include "util/NKTrajectory.hpp"
 
 using std::filesystem::directory_iterator;
 using std::filesystem::path;

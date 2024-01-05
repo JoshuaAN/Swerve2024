@@ -1,13 +1,13 @@
 // Copyright (c) FRC Team 122. All Rights Reserved.
 
-#include "Robot.h"
+#include "Robot.hpp"
 
 #include <frc2/command/CommandScheduler.h>
 #include <frc2/command/button/JoystickButton.h>
 
-#include "commands/Drive.h"
-#include "commands/TrajectoryFollower.h"
-#include "util/NKTrajectoryManager.h"
+#include "commands/Drive.hpp"
+#include "commands/TrajectoryFollower.hpp"
+#include "util/NKTrajectoryManager.hpp"
 
 Robot::Robot() { this->CreateRobot(); }
 

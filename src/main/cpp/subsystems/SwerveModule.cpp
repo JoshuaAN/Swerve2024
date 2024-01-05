@@ -74,6 +74,7 @@ SwerveModule::SwerveModule(int driveMotorID, int steerMotorID,
   steerConfig.Feedback.FeedbackRemoteSensorID = m_steerMotor.GetDeviceID();
   steerConfig.Feedback.FeedbackSensorSource =
       signals::FeedbackSensorSourceValue::RemoteCANcoder;
+  steerConfig.ClosedLoopGeneral.ContinuousWrap = true;
 
   m_driveMotor.GetConfigurator().Apply(driveConfig);
   m_steerMotor.GetConfigurator().Apply(steerConfig);

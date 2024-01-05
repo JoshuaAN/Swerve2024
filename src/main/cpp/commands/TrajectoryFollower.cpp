@@ -1,6 +1,6 @@
 // Copyright (c) FRC Team 122. All Rights Reserved.
 
-#include "SwerveDrive/commands/TrajectoryFollower.h"
+#include "commands/TrajectoryFollower.h"
 
 #include <frc/Timer.h>
 #include <frc/kinematics/ChassisSpeeds.h>

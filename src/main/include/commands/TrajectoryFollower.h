@@ -7,7 +7,7 @@
 #include <frc2/command/Command.h>
 #include <frc2/command/CommandHelper.h>
 
-#include "SwerveDrive/SwerveDrive.h"
+#include "Subsystems/SwerveDrive.h"
 #include "util/NKTrajectory.h"
 
 class TrajectoryFollower

@@ -5,8 +5,8 @@
 #include <frc2/command/CommandScheduler.h>
 #include <frc2/command/button/JoystickButton.h>
 
-#include "SwerveDrive/commands/Drive.h"
-#include "SwerveDrive/commands/TrajectoryFollower.h"
+#include "commands/Drive.h"
+#include "commands/TrajectoryFollower.h"
 #include "util/NKTrajectoryManager.h"
 
 Robot::Robot() { this->CreateRobot(); }

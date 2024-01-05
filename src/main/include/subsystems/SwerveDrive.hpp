@@ -34,29 +34,29 @@ public:
    */
   void Periodic() override;
 
-  void drive(frc::ChassisSpeeds);
+  void Drive(frc::ChassisSpeeds);
 
-  void setFast();
-  void setSlow();
+  void SetFast();
+  void SetSlow();
 
-  frc::Rotation2d getHeading();
-  void resetHeading();
-  void resetDriveEncoders();
+  frc::Rotation2d GetHeading();
+  void ResetHeading();
+  void ResetDriveEncoders();
 
-  std::array<frc::SwerveModulePosition, 4> getModulePositions();
+  std::array<frc::SwerveModulePosition, 4> GetModulePositions();
 
-  void resetPose(frc::Pose2d);
-  frc::Pose2d getPose();
+  void ResetPose(frc::Pose2d);
+  frc::Pose2d GetPose();
 
-  void updateOdometry();
+  void UpdateOdometry();
 
-  frc::SwerveDriveKinematics<4> getKinematics();
-  void initializePID();
-  void setReference(frc::Pose2d);
+  frc::SwerveDriveKinematics<4> GetKinematics();
+  void InitializePID();
+  void SetReference(frc::Pose2d);
 
   std::optional<frc::Pose3d> getCameraResults();
-  void publishOdometry(frc::Pose2d);
-  void printNetworkTableValues();
+  void PublishOdometry(frc::Pose2d);
+  void PrintNetworkTableValues();
 
 private:
   // Components (e.g. motor controllers and sensors) should generally be

@@ -13,6 +13,7 @@
 #include <frc/kinematics/SwerveDriveKinematics.h>
 #include <frc/kinematics/SwerveModuleState.h>
 #include <units/acceleration.h>
+#include <units/angular_velocity.h>
 #include <units/math.h>
 #include <units/time.h>
 #include <units/velocity.h>
@@ -56,17 +57,18 @@ const SDSModuleType mk4i_l3{0.10033,
 
 const SDSModuleType kSDSModule = mk4i_l3;
 
-const double kTrackwidthMeters = 0.4;
-const double kWheelbaseMeters = 0.4;
+const auto kTrackwidthMeters = 0.4_m;
+const auto kWheelbaseMeters = 0.4_m;
 
 const double kDefaultAxisDeadband = 0.15;
-const double kMaxTranslationalVelocity =
+const units::meters_per_second_t kMaxTranslationalVelocity{
     ((6380.0) / 60) * kSDSModule.wheelDiameter * std::numbers::pi *
-    kSDSModule.driveReduction;
+    kSDSModule.driveReduction};
 
-const double kMaxRotationalVelocity =
-    (kMaxTranslationalVelocity) /
-    std::hypot(kTrackwidthMeters / 2, kWheelbaseMeters / 2);
+const units::radians_per_second_t kMaxRotationalVelocity{
+    (kMaxTranslationalVelocity /
+     units::math::hypot(kTrackwidthMeters / 2, kWheelbaseMeters / 2))
+        .value()};
 const bool kIsFieldRelative = true;
 
 const frc::Rotation2d kFrontLeftOffset =
@@ -103,7 +105,7 @@ const double kRotationLimit = kDriveLimit;
 namespace ModuleConstants {
 
 // meters / second
-const double kMaxSpeed = DriveConstants::kMaxTranslationalVelocity;
+const auto kMaxSpeed = DriveConstants::kMaxTranslationalVelocity;
 // meters
 const auto kWheelDiameterMeters =
     units::meter_t{DriveConstants::kSDSModule.wheelDiameter};
@@ -152,7 +154,7 @@ const double kSteerD = 1.0; // 12.0
 } // namespace ModuleConstants
 
 namespace MathUtilNK {
-inline double calculateAxis(double axis, double deadband, double scalar) {
+inline double calculateAxis(double axis, double deadband) {
   double res = axis;
 
   if (std::abs(axis) > deadband) {
@@ -161,7 +163,7 @@ inline double calculateAxis(double axis, double deadband, double scalar) {
     res = 0.0;
   }
 
-  return res * scalar;
+  return res;
 }
 
 } // namespace MathUtilNK

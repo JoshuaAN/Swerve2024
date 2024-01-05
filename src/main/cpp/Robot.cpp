@@ -3,9 +3,9 @@
 #include "Robot.hpp"
 
 #include <frc2/command/CommandScheduler.h>
+#include <frc2/command/RunCommand.h>
 #include <frc2/command/button/JoystickButton.h>
 
-#include "commands/Drive.hpp"
 #include "commands/TrajectoryFollower.hpp"
 #include "util/NKTrajectoryManager.hpp"
 
@@ -84,34 +84,28 @@ void Robot::SimulationPeriodic() {}
  */
 void Robot::CreateRobot() {
   // Initialize all of your commands and subsystems here
-  m_swerveDrive.SetDefaultCommand(Drive(
-      &m_swerveDrive,
+  m_swerveDrive.SetDefaultCommand(frc2::RunCommand(
       [this] {
-        return MathUtilNK::calculateAxis(
-            m_driverController.GetRawAxis(0),
-            DriveConstants::kDefaultAxisDeadband,
-            DriveConstants::kDriveLimit *
-                DriveConstants::kMaxTranslationalVelocity);
+        auto leftXAxis =
+            MathUtilNK::calculateAxis(m_driverController.GetRawAxis(0),
+                                      DriveConstants::kDefaultAxisDeadband);
+        auto leftYAxis =
+            MathUtilNK::calculateAxis(m_driverController.GetRawAxis(1),
+                                      DriveConstants::kDefaultAxisDeadband);
+        auto rightXAxis =
+            MathUtilNK::calculateAxis(m_driverController.GetRawAxis(4),
+                                      DriveConstants::kDefaultAxisDeadband);
+        m_swerveDrive.Drive(frc::ChassisSpeeds::FromFieldRelativeSpeeds(
+            leftXAxis * DriveConstants::kMaxTranslationalVelocity,
+            leftYAxis * DriveConstants::kMaxTranslationalVelocity,
+            rightXAxis * DriveConstants::kMaxRotationalVelocity,
+            m_swerveDrive.GetHeading()));
       },
-      [this] {
-        return MathUtilNK::calculateAxis(
-            m_driverController.GetRawAxis(1),
-            DriveConstants::kDefaultAxisDeadband,
-            DriveConstants::kDriveLimit *
-                DriveConstants::kMaxTranslationalVelocity);
-      },
-      [this] {
-        return MathUtilNK::calculateAxis(
-            m_driverController.GetRawAxis(4),
-            DriveConstants::kDefaultAxisDeadband,
-            DriveConstants::kRotationLimit *
-                DriveConstants::kMaxRotationalVelocity);
-      }));
-  // TODO: test
+      {&m_swerveDrive}));
 
   // Configure the button bindings
   BindCommands();
-  m_swerveDrive.resetHeading();
+  m_swerveDrive.ResetHeading();
 }
 
 /**
@@ -120,7 +114,7 @@ void Robot::CreateRobot() {
 void Robot::BindCommands() {
   frc2::JoystickButton(&m_driverController, 1)
       .OnTrue(frc2::CommandPtr((frc2::RunCommand([this] {
-        return m_swerveDrive.resetHeading();
+        return m_swerveDrive.ResetHeading();
       })))); // TODO assign as test
 }
 
@@ -141,11 +135,10 @@ void Robot::UpdateDashboard() {
   frc::SmartDashboard::PutNumber(
       "adjusted X",
       MathUtilNK::calculateAxis(m_driverController.GetX(),
-                                DriveConstants::kDefaultAxisDeadband,
-                                DriveConstants::kDriveLimit *
-                                    DriveConstants::kMaxTranslationalVelocity));
+                                DriveConstants::kDefaultAxisDeadband) *
+          DriveConstants::kMaxTranslationalVelocity.value());
   frc::SmartDashboard::PutNumber("Swerve Drive Heading",
-                                 m_swerveDrive.getHeading().Degrees().value());
+                                 m_swerveDrive.GetHeading().Degrees().value());
 }
 
 #ifndef RUNNING_FRC_TESTS

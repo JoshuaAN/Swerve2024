@@ -5,6 +5,8 @@
 #include <frc/kinematics/SwerveDriveOdometry.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 
+#include "Constants.hpp"
+
 SwerveDrive::SwerveDrive()
     : modules{{SwerveModule(ElectricalConstants::kFrontLeftDriveMotorID,
                             ElectricalConstants::kFrontLeftTurnMotorID,
@@ -45,62 +47,63 @@ void SwerveDrive::Periodic() {
   // getCameraResults();
   // sensor fusion? EKF (eek kinda fun)
   // publishOdometry(odometry.GetPose());
-  frc::SmartDashboard::PutNumber("Heading", double{getHeading().Degrees()});
+  frc::SmartDashboard::PutNumber("Heading", GetHeading().Degrees().value());
 }
 
-void SwerveDrive::drive(frc::ChassisSpeeds desiredSpeeds) {
-  speeds = desiredSpeeds;
+void SwerveDrive::Drive(frc::ChassisSpeeds speeds) {
   auto states = kinematics.ToSwerveModuleStates(speeds);
 
   kinematics.DesaturateWheelSpeeds(
-      &states, units::meters_per_second_t{ModuleConstants::kMaxSpeed});
+      &states, speeds, units::meters_per_second_t{ModuleConstants::kMaxSpeed},
+      DriveConstants::kMaxTranslationalVelocity,
+      DriveConstants::kMaxRotationalVelocity);
 
   for (int i = 0; i < 4; i++) {
     modules[i].SetDesiredState(states[i]);
   }
 
-  frc::SmartDashboard::PutNumber("drive/vx", desiredSpeeds.vx.value());
-  frc::SmartDashboard::PutNumber("drive/vy", desiredSpeeds.vy.value());
-  frc::SmartDashboard::PutNumber("drive/omega", desiredSpeeds.omega.value());
+  frc::SmartDashboard::PutNumber("drive/vx", speeds.vx.value());
+  frc::SmartDashboard::PutNumber("drive/vy", speeds.vy.value());
+  frc::SmartDashboard::PutNumber("drive/omega", speeds.omega.value());
 }
 
-void SwerveDrive::setFast() {}
+void SwerveDrive::SetFast() {}
 
-void SwerveDrive::setSlow() {}
+void SwerveDrive::SetSlow() {}
 
-frc::Rotation2d SwerveDrive::getHeading() {
+frc::Rotation2d SwerveDrive::GetHeading() {
   return units::degree_t{-navx.GetAngle()};
 }
 
-void SwerveDrive::resetHeading() { navx.ZeroYaw(); }
+void SwerveDrive::ResetHeading() { navx.ZeroYaw(); }
 
-void SwerveDrive::resetDriveEncoders() {
+void SwerveDrive::ResetDriveEncoders() {
   for (auto &module : modules) {
     module.ResetDriveEncoders();
   }
 }
 
-std::array<frc::SwerveModulePosition, 4> SwerveDrive::getModulePositions() {
+std::array<frc::SwerveModulePosition, 4> SwerveDrive::GetModulePositions() {
   return std::array<frc::SwerveModulePosition, 4>{
       {modules[0].GetPosition(), modules[1].GetPosition(),
        modules[2].GetPosition(), modules[3].GetPosition()}};
 }
 
-void SwerveDrive::resetPose(frc::Pose2d position) {
-  odometry.ResetPosition(getHeading(), getModulePositions(), position);
+void SwerveDrive::ResetPose(frc::Pose2d position) {
+  odometry.ResetPosition(GetHeading(), GetModulePositions(), position);
 }
 
-frc::Pose2d SwerveDrive::getPose() { return odometry.GetPose(); }
+frc::Pose2d SwerveDrive::GetPose() { return odometry.GetPose(); }
 
-void SwerveDrive::updateOdometry() {
-  odometry.Update(getHeading(), getModulePositions());
+void SwerveDrive::UpdateOdometry() {
+  odometry.Update(GetHeading(), GetModulePositions());
 }
 
-frc::SwerveDriveKinematics<4> SwerveDrive::getKinematics() {
+frc::SwerveDriveKinematics<4> SwerveDrive::GetKinematics() {
   return kinematics;
 }
 
-void SwerveDrive::initializePID() {
+void SwerveDrive::InitializePID() {
   pidX = frc::PIDController(0.9, 1e-4, 0);
   pidY = frc::PIDController(0.9, 1e-4, 0);
   pidRot = frc::PIDController(0.15, 0, 0);
@@ -112,16 +115,15 @@ void SwerveDrive::initializePID() {
   hasRun = false;
 }
 
-void SwerveDrive::setReference(frc::Pose2d desiredPose) {
+void SwerveDrive::SetReference(frc::Pose2d desiredPose) {
   if ((!pidX.AtSetpoint() && !pidY.AtSetpoint()) | !hasRun) {
     speeds = frc::ChassisSpeeds{
         units::meters_per_second_t{
-            pidX.Calculate(double{getPose().X()}, double{desiredPose.X()})},
+            pidX.Calculate(GetPose().X().value(), desiredPose.X().value())},
         units::meters_per_second_t{
-            pidY.Calculate(double{getPose().Y()}, double{desiredPose.Y()})},
+            pidY.Calculate(GetPose().Y().value(), desiredPose.Y().value())},
         units::radians_per_second_t{0}};
-
-    drive(speeds);
+    Drive(speeds);
   }
 }
 
@@ -145,12 +147,12 @@ std::optional<frc::Pose3d> SwerveDrive::getCameraResults() {
   }
 }
 
-void SwerveDrive::publishOdometry(frc::Pose2d odometryPose) {
+void SwerveDrive::PublishOdometry(frc::Pose2d odometryPose) {
   double poseDeconstruct[]{double{odometryPose.X()}, double{odometryPose.Y()}};
   int64_t time = nt::Now();
   ntPosePublisher.Set(poseDeconstruct, time);
 }
 
-void SwerveDrive::printNetworkTableValues() {
+void SwerveDrive::PrintNetworkTableValues() {
   // TODO: write print function :3
 }

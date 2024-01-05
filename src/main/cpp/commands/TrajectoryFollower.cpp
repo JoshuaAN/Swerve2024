@@ -22,12 +22,12 @@ void TrajectoryFollower::Initialize() {
   m_controllerRotation.EnableContinuousInput(-std::numbers::pi,
                                              std::numbers::pi);
 
-  m_drive->resetPose(m_trajectory->GetInitialPose());
+  m_drive->ResetPose(m_trajectory->GetInitialPose());
 }
 
 void TrajectoryFollower::Execute() {
   auto state = m_trajectory->Sample(m_timestamp.Get());
-  auto currentPose = m_drive->getPose();
+  auto currentPose = m_drive->GetPose();
 
   m_controllerX.SetSetpoint(state.pose.X().value());
   m_controllerY.SetSetpoint(state.pose.Y().value());
@@ -41,12 +41,12 @@ void TrajectoryFollower::Execute() {
       state.omega + radians_per_second_t{m_controllerRotation.Calculate(
                         currentPose.Rotation().Radians().value())};
 
-  m_drive->drive(frc::ChassisSpeeds::FromFieldRelativeSpeeds(
+  m_drive->Drive(frc::ChassisSpeeds::FromFieldRelativeSpeeds(
       vx, vy, omega, currentPose.Rotation()));
 }
 
 void TrajectoryFollower::End(bool interrupted) {
-  m_drive->drive(frc::ChassisSpeeds{});
+  m_drive->Drive(frc::ChassisSpeeds{});
 }
 
 bool TrajectoryFollower::IsFinished() {

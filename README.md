@@ -1,8 +1,5 @@
 This contains code for an FRC Swerve base in C++
 
-Last updated for 2023 season
-Created: 12/30/2023
-
 This swerve base makes use of the following hardware
 
 - 8 Falcon 500s

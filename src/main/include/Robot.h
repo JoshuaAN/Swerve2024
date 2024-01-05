@@ -40,8 +40,8 @@ private:
   SwerveDrive m_swerveDrive;
 
   // PS4 controllers
-  frc::Joystick m_driverController{GeneralConstants::kDriverPort};
-  frc::Joystick m_operatorController{GeneralConstants::kOperatorPort};
+  frc::Joystick m_driverController{DriveConstants::kDriverPort};
+  frc::Joystick m_operatorController{DriveConstants::kOperatorPort};
 
   //
   // Robot Container methods

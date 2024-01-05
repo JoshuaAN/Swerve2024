@@ -33,9 +33,7 @@ void Robot::RobotPeriodic() {
  */
 void Robot::DisabledInit() {}
 
-void Robot::DisabledPeriodic() {
-  m_swerveDrive.SyncEncoders();
-}
+void Robot::DisabledPeriodic() {}
 
 /**
  * This autonomous runs the autonomous command selected by your {@link
@@ -90,21 +88,24 @@ void Robot::CreateRobot() {
       &m_swerveDrive,
       [this] {
         return MathUtilNK::calculateAxis(
-            m_driverController.GetRawAxis(0), GeneralConstants::kDefaultAxisDeadband,
-            GeneralConstants::kDriveLimit *
-                GeneralConstants::kMaxTranslationalVelocity);
+            m_driverController.GetRawAxis(0),
+            DriveConstants::kDefaultAxisDeadband,
+            DriveConstants::kDriveLimit *
+                DriveConstants::kMaxTranslationalVelocity);
       },
       [this] {
         return MathUtilNK::calculateAxis(
-            m_driverController.GetRawAxis(1), GeneralConstants::kDefaultAxisDeadband,
-            GeneralConstants::kDriveLimit *
-                GeneralConstants::kMaxTranslationalVelocity);
+            m_driverController.GetRawAxis(1),
+            DriveConstants::kDefaultAxisDeadband,
+            DriveConstants::kDriveLimit *
+                DriveConstants::kMaxTranslationalVelocity);
       },
       [this] {
         return MathUtilNK::calculateAxis(
-            m_driverController.GetRawAxis(4), GeneralConstants::kDefaultAxisDeadband,
-            GeneralConstants::kRotationLimit *
-                GeneralConstants::kMaxRotationalVelocity);
+            m_driverController.GetRawAxis(4),
+            DriveConstants::kDefaultAxisDeadband,
+            DriveConstants::kRotationLimit *
+                DriveConstants::kMaxRotationalVelocity);
       }));
   // TODO: test
 
@@ -127,7 +128,9 @@ void Robot::BindCommands() {
  * Returns the Autonomous Command
  */
 frc2::CommandPtr Robot::GetAutonomousCommand() {
-  return TrajectoryFollower(&m_swerveDrive, &NKTrajectoryManager::GetTrajectory("NewPath")).ToPtr();
+  return TrajectoryFollower(&m_swerveDrive,
+                            &NKTrajectoryManager::GetTrajectory("NewPath"))
+      .ToPtr();
 }
 
 /**
@@ -137,10 +140,10 @@ void Robot::UpdateDashboard() {
   frc::SmartDashboard::PutNumber("driver X", m_driverController.GetX());
   frc::SmartDashboard::PutNumber(
       "adjusted X",
-      MathUtilNK::calculateAxis(
-          m_driverController.GetX(), GeneralConstants::kDefaultAxisDeadband,
-          GeneralConstants::kDriveLimit *
-              GeneralConstants::kMaxTranslationalVelocity));
+      MathUtilNK::calculateAxis(m_driverController.GetX(),
+                                DriveConstants::kDefaultAxisDeadband,
+                                DriveConstants::kDriveLimit *
+                                    DriveConstants::kMaxTranslationalVelocity));
   frc::SmartDashboard::PutNumber("Swerve Drive Heading",
                                  m_swerveDrive.getHeading().Degrees().value());
 }

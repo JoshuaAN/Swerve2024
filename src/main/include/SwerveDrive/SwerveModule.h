@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include <ctre/phoenix6/TalonFX.hpp>
 #include <ctre/phoenix6/CANcoder.hpp>
+#include <ctre/phoenix6/TalonFX.hpp>
 #include <frc/controller/SimpleMotorFeedforward.h>
 #include <frc/geometry/Rotation2d.h>
 #include <frc/kinematics/SwerveModulePosition.h>
@@ -16,8 +16,6 @@
 #include <units/voltage.h>
 
 #include "Constants.h"
-#include "ctre/phoenix6/TalonFX.hpp"
-#include "util/NKFalcon.h"
 
 class SwerveModule : public frc2::SubsystemBase {
 public:
@@ -34,18 +32,13 @@ public:
    */
   void SimulationPeriodic() override;
 
-  void SyncEncoders();
   frc::SwerveModuleState GetCurrentState();
   frc::SwerveModulePosition GetPosition();
   void SetDesiredState(frc::SwerveModuleState desiredState);
-  void SetOpenLoopState(frc::SwerveModuleState desiredState);
   void ResetDriveEncoders();
   void InitEncoder(int encoderID);
-  frc::SwerveModuleState CheckForWrapAround(frc::SwerveModuleState desiredState,
-                                            frc::Rotation2d currentState);
   frc::Rotation2d GetRotation();
   frc::Rotation2d GetAbsoluteRotation();
-  void SetOffset(double offset);
 
 private:
   // Components (e.g. motor controllers and sensors) should generally be
@@ -55,11 +48,8 @@ private:
   ctre::phoenix6::hardware::TalonFX m_driveMotor;
   ctre::phoenix6::hardware::TalonFX m_steerMotor;
   ctre::phoenix6::hardware::CANcoder m_steerEncoder;
-  
+
   frc::Rotation2d m_angleOffset;
-  frc::SimpleMotorFeedforward<units::meters> m_feedForward{
-      ModuleConstants::kDriveS, ModuleConstants::kDriveV,
-      ModuleConstants::kDriveA};
 
   // simulation fields
   frc::Timer m_simTimer;

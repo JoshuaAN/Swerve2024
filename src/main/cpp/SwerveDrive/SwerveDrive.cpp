@@ -1,27 +1,27 @@
 // Copyright (c) FRC Team 122. All Rights Reserved.
 
 #include "SwerveDrive/SwerveDrive.h"
-#include "frc/smartdashboard/SmartDashboard.h"
 
 #include <frc/kinematics/SwerveDriveOdometry.h>
+#include <frc/smartdashboard/SmartDashboard.h>
 
 SwerveDrive::SwerveDrive()
-    : modules{{SwerveModule(GeneralConstants::kFrontLeftDriveMotorID,
-                            GeneralConstants::kFrontLeftTurnMotorID,
-                            GeneralConstants::kFrontLeftEncoderID,
-                            GeneralConstants::kFrontLeftOffset),
-               SwerveModule(GeneralConstants::kFrontRightDriveMotorID,
-                            GeneralConstants::kFrontRightTurnMotorID,
-                            GeneralConstants::kFrontRightEncoderID,
-                            GeneralConstants::kFrontRightOffset),
-               SwerveModule(GeneralConstants::kBackLeftDriveMotorID,
-                            GeneralConstants::kBackLeftTurnMotorID,
-                            GeneralConstants::kBackLeftEncoderID,
-                            GeneralConstants::kBackLeftOffset),
-               SwerveModule(GeneralConstants::kBackRightDriveMotorID,
-                            GeneralConstants::kBackRightTurnMotorID,
-                            GeneralConstants::kBackRightEncoderID,
-                            GeneralConstants::kBackRightOffset)}},
+    : modules{{SwerveModule(ElectricalConstants::kFrontLeftDriveMotorID,
+                            ElectricalConstants::kFrontLeftTurnMotorID,
+                            ElectricalConstants::kFrontLeftEncoderID,
+                            DriveConstants::kFrontLeftOffset),
+               SwerveModule(ElectricalConstants::kFrontRightDriveMotorID,
+                            ElectricalConstants::kFrontRightTurnMotorID,
+                            ElectricalConstants::kFrontRightEncoderID,
+                            DriveConstants::kFrontRightOffset),
+               SwerveModule(ElectricalConstants::kBackLeftDriveMotorID,
+                            ElectricalConstants::kBackLeftTurnMotorID,
+                            ElectricalConstants::kBackLeftEncoderID,
+                            DriveConstants::kBackLeftOffset),
+               SwerveModule(ElectricalConstants::kBackRightDriveMotorID,
+                            ElectricalConstants::kBackRightTurnMotorID,
+                            ElectricalConstants::kBackRightEncoderID,
+                            DriveConstants::kBackRightOffset)}},
       odometry{kinematics,
                frc::Rotation2d(units::degree_t{-navx.GetAngle()}),
                {modules[0].GetPosition(), modules[1].GetPosition(),
@@ -153,10 +153,4 @@ void SwerveDrive::publishOdometry(frc::Pose2d odometryPose) {
 
 void SwerveDrive::printNetworkTableValues() {
   // TODO: write print function :3
-}
-
-void SwerveDrive::SyncEncoders() {
-  for (auto& module : modules) {
-    module.SyncEncoders();
-  }
 }

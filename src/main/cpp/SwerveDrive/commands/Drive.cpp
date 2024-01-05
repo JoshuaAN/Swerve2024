@@ -14,7 +14,7 @@ void Drive::Initialize() {}
 
 // Called repeatedly when this Command is scheduled to run
 void Drive::Execute() {
-  if (GeneralConstants::kIsFieldRelative) {
+  if (DriveConstants::kIsFieldRelative) {
     speeds = frc::ChassisSpeeds::FromFieldRelativeSpeeds(
         units::meters_per_second_t{x()}, units::meters_per_second_t{y()},
         units::radians_per_second_t{rot()}, swerve->getHeading());

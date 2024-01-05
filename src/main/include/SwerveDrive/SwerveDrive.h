@@ -58,8 +58,6 @@ public:
   void publishOdometry(frc::Pose2d);
   void printNetworkTableValues();
 
-  void SyncEncoders();
-
 private:
   // Components (e.g. motor controllers and sensors) should generally be
   // declared private and exposed only through public methods.
@@ -70,17 +68,17 @@ private:
   frc::ChassisSpeeds speeds;
   frc::SwerveDriveKinematics<4> kinematics{
       frc::Translation2d{
-          units::meter_t{GeneralConstants::kTrackwidthMeters / 2.0},
-          units::meter_t{GeneralConstants::kWheelbaseMeters / 2.0}},
+          units::meter_t{DriveConstants::kTrackwidthMeters / 2.0},
+          units::meter_t{DriveConstants::kWheelbaseMeters / 2.0}},
       frc::Translation2d{
-          units::meter_t{GeneralConstants::kTrackwidthMeters / 2.0},
-          units::meter_t{-GeneralConstants::kWheelbaseMeters / 2.0}},
+          units::meter_t{DriveConstants::kTrackwidthMeters / 2.0},
+          units::meter_t{-DriveConstants::kWheelbaseMeters / 2.0}},
       frc::Translation2d{
-          units::meter_t{-GeneralConstants::kTrackwidthMeters / 2.0},
-          units::meter_t{GeneralConstants::kWheelbaseMeters / 2.0}},
+          units::meter_t{-DriveConstants::kTrackwidthMeters / 2.0},
+          units::meter_t{DriveConstants::kWheelbaseMeters / 2.0}},
       frc::Translation2d{
-          units::meter_t{-GeneralConstants::kTrackwidthMeters / 2.0},
-          units::meter_t{-GeneralConstants::kWheelbaseMeters / 2.0}}};
+          units::meter_t{-DriveConstants::kTrackwidthMeters / 2.0},
+          units::meter_t{-DriveConstants::kWheelbaseMeters / 2.0}}};
   frc::SwerveDriveOdometry<4> odometry;
 
   frc::PIDController pidX;

@@ -143,13 +143,17 @@ const double kDrivePeakCurrentDuration = 0.1;
 const double kDriveP = 0.10;
 const double kDriveI = 0.0;
 const double kDriveD = 0.0;
-const double kDriveS = 0.05558; // Volts
-const double kDriveV = 0.20333; // Volts / (rot / s)
-const double kDriveA = 0.02250; // Volts / (rot / s^2)
+const double kDriveS = 0.0; // Volts
+const double kDriveV = 0.0; // Volts / (rot / s)
+const double kDriveA = 0.0; // Volts / (rot / s^2)
 
-const double kSteerP = 0.3;
+// const double kDriveS = 0.05558; // Volts
+// const double kDriveV = 0.20333; // Volts / (rot / s)
+// const double kDriveA = 0.02250; // Volts / (rot / s^2)
+
+const double kSteerP = 0.6;
 const double kSteerI = 0.0;
-const double kSteerD = 1.0; // 12.0
+const double kSteerD = 0.002;
 
 } // namespace ModuleConstants
 

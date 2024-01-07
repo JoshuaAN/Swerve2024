@@ -20,8 +20,8 @@ using namespace ModuleConstants;
 
 SwerveModule::SwerveModule(int driveMotorID, int steerMotorID,
                            int steerEncoderId, frc::Rotation2d angleOffset)
-    : m_id{driveMotorID / 10}, m_driveMotor{driveMotorID},
-      m_steerMotor{steerMotorID}, m_steerEncoder{steerEncoderId},
+    : m_id{driveMotorID / 10}, m_driveMotor{driveMotorID, "NKCanivore1"},
+      m_steerMotor{steerMotorID, "NKCanivore1"}, m_steerEncoder{steerEncoderId, "NKCanivore1"},
       m_angleOffset{angleOffset}, m_driveSim("TalonFX", driveMotorID),
       m_steerSim("TalonFX", steerMotorID),
       m_driveSimVelocity(m_driveSim.GetDouble("Velocity")),

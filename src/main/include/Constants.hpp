@@ -61,15 +61,18 @@ const auto kTrackwidthMeters = 0.4_m;
 const auto kWheelbaseMeters = 0.4_m;
 
 const double kDefaultAxisDeadband = 0.15;
-const units::meters_per_second_t kMaxTranslationalVelocity{2};
+const units::meters_per_second_t kMaxTranslationalVelocity{0.5};
 
-const units::radians_per_second_t kMaxRotationalVelocity{5};
+const units::radians_per_second_t kMaxRotationalVelocity{1};
 const bool kIsFieldRelative = true;
 
-const frc::Rotation2d kFrontLeftOffset{-units::degree_t{103+180}}; // module 1
-const frc::Rotation2d kFrontRightOffset{-units::degree_t{-40+180-2.5}}; // 139.658 // 139.658 // module 2
-const frc::Rotation2d kBackLeftOffset{-units::degree_t{157+180+3.6}}; // module 3
-const frc::Rotation2d kBackRightOffset{-units::degree_t{82+180+3}}; // 265.517 // -93.867 // module 4
+const frc::Rotation2d kFrontLeftOffset{-units::degree_t{103 + 180}}; // module 1
+const frc::Rotation2d kFrontRightOffset{
+    -units::degree_t{-40 + 180 - 2.5}}; // 139.658 // 139.658 // module 2
+const frc::Rotation2d kBackLeftOffset{
+    -units::degree_t{157 + 180 + 3.6}}; // module 3
+const frc::Rotation2d kBackRightOffset{
+    -units::degree_t{82 + 180 + 3}}; // 265.517 // -93.867 // module 4
 
 const frc::Translation2d kFrontLeftPosition =
     frc::Translation2d(units::meter_t{kTrackwidthMeters / 2.0},
@@ -135,8 +138,8 @@ const double kDriveP = 0.2;
 const double kDriveI = 0.0;
 const double kDriveD = 0.0;
 const double kDriveS = 0.02496863326; // Volts
-const double kDriveV = 0.1089791826; // Volts / (rot / s)
-const double kDriveA = 0.0; // Volts / (rot / s^2)
+const double kDriveV = 0.1089791826;  // Volts / (rot / s)
+const double kDriveA = 0.0;           // Volts / (rot / s^2)
 
 // const double kDriveS = 0.05558; // Volts
 // const double kDriveV = 0.20333; // Volts / (rot / s)

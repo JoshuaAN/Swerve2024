@@ -12,10 +12,10 @@
 #include <frc/geometry/Rotation2d.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <units/angle.h>
+#include <units/angular_acceleration.h>
 #include <units/angular_velocity.h>
 
 #include "Constants.hpp"
-#include "units/angular_acceleration.h"
 
 using namespace ctre::phoenix6;
 using namespace ModuleConstants;
@@ -23,9 +23,9 @@ using namespace ModuleConstants;
 SwerveModule::SwerveModule(int driveMotorID, int steerMotorID,
                            int steerEncoderId, frc::Rotation2d angleOffset)
     : m_id{driveMotorID / 10}, m_driveMotor{driveMotorID, "NKCanivore1"},
-      m_steerMotor{steerMotorID, "NKCanivore1"}, m_steerEncoder{steerEncoderId, "NKCanivore1"},
-      m_angleOffset{angleOffset}, m_driveSim("TalonFX", driveMotorID),
-      m_steerSim("TalonFX", steerMotorID),
+      m_steerMotor{steerMotorID, "NKCanivore1"},
+      m_steerEncoder{steerEncoderId, "NKCanivore1"}, m_angleOffset{angleOffset},
+      m_driveSim("TalonFX", driveMotorID), m_steerSim("TalonFX", steerMotorID),
       m_driveSimVelocity(m_driveSim.GetDouble("Velocity")),
       m_driveSimPosition(m_driveSim.GetDouble("Position")),
       m_steerSimPosition(m_steerSim.GetDouble("Position")) {
@@ -67,8 +67,8 @@ SwerveModule::SwerveModule(int driveMotorID, int steerMotorID,
   driveConfig.CurrentLimits = driveCurrentLimitConfig;
   steerConfig.CurrentLimits = steerCurrentLimitConfig;
 
-  // TODO: ensure this works, different invert method may be why we needed negative PID values
-  // m_steerMotor.SetInverted(kSteerMotorInverted);
+  // TODO: ensure this works, different invert method may be why we needed
+  // negative PID values m_steerMotor.SetInverted(kSteerMotorInverted);
   // m_driveMotor.SetInverted(kDriveMotorInverted);
   driveConfig.MotorOutput.Inverted = kDriveMotorInverted;
   steerConfig.MotorOutput.Inverted = kSteerMotorInverted;
@@ -98,9 +98,9 @@ void SwerveModule::Periodic() {
   frc::SmartDashboard::PutNumber("Module " + std::to_string(m_id) + "/" +
                                      " CANCoder Angle",
                                  GetAbsoluteRotation().Degrees().value());
-  frc::SmartDashboard::PutNumber("Module " + std::to_string(m_id) + "/" +
-                                     " Velocity",
-                                 (m_driveMotor.GetVelocity()).GetValue().value());
+  frc::SmartDashboard::PutNumber(
+      "Module " + std::to_string(m_id) + "/" + " Velocity",
+      (m_driveMotor.GetVelocity()).GetValue().value());
   // frc::SmartDashboard::PutNumber("Module " + std::to_string(m_id) + " Magnet
   // offset",
   //                                m_angleOffset.Degrees().value());

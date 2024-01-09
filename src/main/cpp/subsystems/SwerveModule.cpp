@@ -12,8 +12,10 @@
 #include <frc/geometry/Rotation2d.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <units/angle.h>
+#include <units/angular_velocity.h>
 
 #include "Constants.hpp"
+#include "units/angular_acceleration.h"
 
 using namespace ctre::phoenix6;
 using namespace ModuleConstants;
@@ -34,7 +36,7 @@ SwerveModule::SwerveModule(int driveMotorID, int steerMotorID,
   CANcoderConfig.MagnetSensor.AbsoluteSensorRange =
       signals::AbsoluteSensorRangeValue::Signed_PlusMinusHalf;
   CANcoderConfig.MagnetSensor.SensorDirection =
-      signals::SensorDirectionValue::Clockwise_Positive;
+      signals::SensorDirectionValue::CounterClockwise_Positive;
   CANcoderConfig.MagnetSensor.MagnetOffset =
       units::turn_t{m_angleOffset.Degrees()}.value();
 
@@ -65,13 +67,16 @@ SwerveModule::SwerveModule(int driveMotorID, int steerMotorID,
   driveConfig.CurrentLimits = driveCurrentLimitConfig;
   steerConfig.CurrentLimits = steerCurrentLimitConfig;
 
-  m_steerMotor.SetInverted(kSteerMotorInverted);
-  m_driveMotor.SetInverted(kDriveMotorInverted);
+  // TODO: ensure this works, different invert method may be why we needed negative PID values
+  // m_steerMotor.SetInverted(kSteerMotorInverted);
+  // m_driveMotor.SetInverted(kDriveMotorInverted);
+  driveConfig.MotorOutput.Inverted = kDriveMotorInverted;
+  steerConfig.MotorOutput.Inverted = kSteerMotorInverted;
 
   m_steerMotor.SetNeutralMode(kSteerMotorNeutral);
   m_driveMotor.SetNeutralMode(kDriveMotorNeutral);
 
-  steerConfig.Feedback.FeedbackRemoteSensorID = m_steerMotor.GetDeviceID();
+  steerConfig.Feedback.FeedbackRemoteSensorID = m_steerEncoder.GetDeviceID();
   steerConfig.Feedback.FeedbackSensorSource =
       signals::FeedbackSensorSourceValue::RemoteCANcoder;
   steerConfig.ClosedLoopGeneral.ContinuousWrap = true;
@@ -87,12 +92,15 @@ SwerveModule::SwerveModule(int driveMotorID, int steerMotorID,
 
 // This method will be called once per scheduler run
 void SwerveModule::Periodic() {
-  frc::SmartDashboard::PutNumber("Module " + std::to_string(m_id) +
+  frc::SmartDashboard::PutNumber("Module " + std::to_string(m_id) + "/" +
                                      " Reported Angle",
                                  GetRotation().Degrees().value());
-  frc::SmartDashboard::PutNumber("Module " + std::to_string(m_id) +
+  frc::SmartDashboard::PutNumber("Module " + std::to_string(m_id) + "/" +
                                      " CANCoder Angle",
                                  GetAbsoluteRotation().Degrees().value());
+  frc::SmartDashboard::PutNumber("Module " + std::to_string(m_id) + "/" +
+                                     " Velocity",
+                                 (m_driveMotor.GetVelocity()).GetValue().value());
   // frc::SmartDashboard::PutNumber("Module " + std::to_string(m_id) + " Magnet
   // offset",
   //                                m_angleOffset.Degrees().value());
@@ -122,12 +130,10 @@ void SwerveModule::SetDesiredState(frc::SwerveModuleState state) {
 
   state = frc::SwerveModuleState::Optimize(state, rotation);
 
-  frc::SmartDashboard::PutNumber("Module " + std::to_string(m_id) +
-                                     " Desired Angle",
-                                 state.angle.Degrees().value());
   auto steerRequest = controls::PositionVoltage{0_tr}.WithSlot(0);
   auto driveRequest = controls::VelocityVoltage{0_tps}.WithSlot(0);
   m_steerMotor.SetControl(steerRequest.WithPosition(state.angle.Radians()));
+  frc::SmartDashboard::PutNumber("/Conversion", kDriveGearRatio);
   m_driveMotor.SetControl(
       driveRequest.WithVelocity(state.speed / kDriveConversion));
 

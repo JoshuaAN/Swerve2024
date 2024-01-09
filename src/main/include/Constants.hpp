@@ -22,21 +22,21 @@
 
 namespace ElectricalConstants {
 
-const int kFrontLeftDriveMotorID = 30;
-const int kFrontLeftTurnMotorID = 31;
-const int kFrontLeftEncoderID = 32;
+const int kFrontLeftDriveMotorID = 10;
+const int kFrontLeftTurnMotorID = 11;
+const int kFrontLeftEncoderID = 12;
 
-const int kFrontRightDriveMotorID = 10;
-const int kFrontRightTurnMotorID = 11;
-const int kFrontRightEncoderID = 12;
+const int kFrontRightDriveMotorID = 20;
+const int kFrontRightTurnMotorID = 21;
+const int kFrontRightEncoderID = 22;
 
-const int kBackLeftDriveMotorID = 40;
-const int kBackLeftTurnMotorID = 41;
-const int kBackLeftEncoderID = 42;
+const int kBackLeftDriveMotorID = 30;
+const int kBackLeftTurnMotorID = 31;
+const int kBackLeftEncoderID = 32;
 
-const int kBackRightDriveMotorID = 20;
-const int kBackRightTurnMotorID = 21;
-const int kBackRightEncoderID = 22;
+const int kBackRightDriveMotorID = 40;
+const int kBackRightTurnMotorID = 41;
+const int kBackRightEncoderID = 42;
 
 } // namespace ElectricalConstants
 
@@ -61,24 +61,15 @@ const auto kTrackwidthMeters = 0.4_m;
 const auto kWheelbaseMeters = 0.4_m;
 
 const double kDefaultAxisDeadband = 0.15;
-const units::meters_per_second_t kMaxTranslationalVelocity{
-    ((6380.0) / 60) * kSDSModule.wheelDiameter * std::numbers::pi *
-    kSDSModule.driveReduction};
+const units::meters_per_second_t kMaxTranslationalVelocity{2};
 
-const units::radians_per_second_t kMaxRotationalVelocity{
-    (kMaxTranslationalVelocity /
-     units::math::hypot(kTrackwidthMeters / 2, kWheelbaseMeters / 2))
-        .value()};
+const units::radians_per_second_t kMaxRotationalVelocity{5};
 const bool kIsFieldRelative = true;
 
-const frc::Rotation2d kFrontLeftOffset =
-    frc::Rotation2d(units::degree_t{65.54}); // module 1
-const frc::Rotation2d kFrontRightOffset =
-    frc::Rotation2d(units::degree_t{15.99}); // 139.658 // 139.658 // module 2
-const frc::Rotation2d kBackLeftOffset =
-    frc::Rotation2d(units::degree_t{356.0}); // module 3
-const frc::Rotation2d kBackRightOffset = frc::Rotation2d(
-    units::degree_t{180 + 48.0}); // 265.517 // -93.867 // module 4
+const frc::Rotation2d kFrontLeftOffset{-units::degree_t{103+180}}; // module 1
+const frc::Rotation2d kFrontRightOffset{-units::degree_t{-40+180-2.5}}; // 139.658 // 139.658 // module 2
+const frc::Rotation2d kBackLeftOffset{-units::degree_t{157+180+3.6}}; // module 3
+const frc::Rotation2d kBackRightOffset{-units::degree_t{82+180+3}}; // 265.517 // -93.867 // module 4
 
 const frc::Translation2d kFrontLeftPosition =
     frc::Translation2d(units::meter_t{kTrackwidthMeters / 2.0},
@@ -116,7 +107,7 @@ const auto kWheelCircumference =
 const double kDriveGearRatio = 1.0 / DriveConstants::kSDSModule.driveReduction;
 const double kTurnGearRatio = 1.0 / DriveConstants::kSDSModule.steerReduction;
 
-const auto kDriveConversion = kWheelCircumference * kDriveGearRatio;
+const auto kDriveConversion = kWheelCircumference / kDriveGearRatio;
 
 const bool kDriveMotorInverted = DriveConstants::kSDSModule.driveInverted;
 
@@ -140,34 +131,30 @@ const int kDrivePeakCurrentLimit = 60;
 const double kDrivePeakCurrentDuration = 0.1;
 
 // TODO: retune constants
-const double kDriveP = 0.10;
+const double kDriveP = 0.2;
 const double kDriveI = 0.0;
 const double kDriveD = 0.0;
-const double kDriveS = 0.0; // Volts
-const double kDriveV = 0.0; // Volts / (rot / s)
+const double kDriveS = 0.02496863326; // Volts
+const double kDriveV = 0.1089791826; // Volts / (rot / s)
 const double kDriveA = 0.0; // Volts / (rot / s^2)
 
 // const double kDriveS = 0.05558; // Volts
 // const double kDriveV = 0.20333; // Volts / (rot / s)
 // const double kDriveA = 0.02250; // Volts / (rot / s^2)
 
-const double kSteerP = 0.6;
+const double kSteerP = 35.0; // TODO: ensure this works with new inversion
 const double kSteerI = 0.0;
-const double kSteerD = 0.002;
+const double kSteerD = 0.0;
 
 } // namespace ModuleConstants
 
 namespace MathUtilNK {
 inline double calculateAxis(double axis, double deadband) {
-  double res = axis;
-
   if (std::abs(axis) > deadband) {
-    res = (axis - std::copysign(deadband, axis)) / (1.0 - deadband);
+    return (axis - std::copysign(deadband, axis)) / (1.0 - deadband);
   } else {
-    res = 0.0;
+    return 0.0;
   }
-
-  return res;
 }
 
 } // namespace MathUtilNK

@@ -24,7 +24,7 @@ SwerveDrive::SwerveDrive()
                             ElectricalConstants::kBackRightTurnMotorID,
                             ElectricalConstants::kBackRightEncoderID,
                             DriveConstants::kBackRightOffset)}},
-      odometry{kinematics,
+      odometry{DriveConstants::kSwerveKinematics,
                frc::Rotation2d(units::degree_t{-navx.GetAngle()}),
                {modules[0].GetPosition(), modules[1].GetPosition(),
                 modules[2].GetPosition(), modules[3].GetPosition()},
@@ -51,9 +51,9 @@ void SwerveDrive::Periodic() {
 }
 
 void SwerveDrive::Drive(frc::ChassisSpeeds speeds) {
-  auto states = kinematics.ToSwerveModuleStates(speeds);
+  auto states = DriveConstants::kSwerveKinematics.ToSwerveModuleStates(speeds);
 
-  kinematics.DesaturateWheelSpeeds(
+  DriveConstants::kSwerveKinematics.DesaturateWheelSpeeds(
       &states, speeds, units::meters_per_second_t{ModuleConstants::kMaxSpeed},
       DriveConstants::kMaxTranslationalVelocity,
       DriveConstants::kMaxRotationalVelocity);
@@ -97,10 +97,6 @@ frc::Pose2d SwerveDrive::GetPose() { return odometry.GetPose(); }
 
 void SwerveDrive::UpdateOdometry() {
   odometry.Update(GetHeading(), GetModulePositions());
-}
-
-frc::SwerveDriveKinematics<4> SwerveDrive::GetKinematics() {
-  return kinematics;
 }
 
 void SwerveDrive::InitializePID() {

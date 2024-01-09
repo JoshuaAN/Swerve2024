@@ -50,7 +50,6 @@ public:
 
   void UpdateOdometry();
 
-  frc::SwerveDriveKinematics<4> GetKinematics();
   void InitializePID();
   void SetReference(frc::Pose2d);
 
@@ -66,19 +65,6 @@ private:
   std::array<SwerveModule, 4> modules;
 
   frc::ChassisSpeeds speeds;
-  frc::SwerveDriveKinematics<4> kinematics{
-      frc::Translation2d{
-          units::meter_t{DriveConstants::kTrackwidthMeters / 2.0},
-          units::meter_t{DriveConstants::kWheelbaseMeters / 2.0}},
-      frc::Translation2d{
-          units::meter_t{DriveConstants::kTrackwidthMeters / 2.0},
-          units::meter_t{-DriveConstants::kWheelbaseMeters / 2.0}},
-      frc::Translation2d{
-          units::meter_t{-DriveConstants::kTrackwidthMeters / 2.0},
-          units::meter_t{DriveConstants::kWheelbaseMeters / 2.0}},
-      frc::Translation2d{
-          units::meter_t{-DriveConstants::kTrackwidthMeters / 2.0},
-          units::meter_t{-DriveConstants::kWheelbaseMeters / 2.0}}};
   frc::SwerveDriveOdometry<4> odometry;
 
   frc::PIDController pidX;

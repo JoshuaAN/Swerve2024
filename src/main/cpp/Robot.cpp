@@ -7,6 +7,9 @@
 #include <frc2/command/button/JoystickButton.h>
 
 #include "commands/TrajectoryFollower.hpp"
+#include "frc/smartdashboard/SmartDashboard.h"
+#include "units/angular_velocity.h"
+#include "units/velocity.h"
 #include "util/NKTrajectoryManager.hpp"
 
 Robot::Robot() { this->CreateRobot(); }
@@ -87,18 +90,23 @@ void Robot::CreateRobot() {
   m_swerveDrive.SetDefaultCommand(frc2::RunCommand(
       [this] {
         auto leftXAxis =
-            MathUtilNK::calculateAxis(m_driverController.GetRawAxis(0),
-                                      DriveConstants::kDefaultAxisDeadband);
-        auto leftYAxis =
             MathUtilNK::calculateAxis(m_driverController.GetRawAxis(1),
                                       DriveConstants::kDefaultAxisDeadband);
-        auto rightXAxis =
-            MathUtilNK::calculateAxis(m_driverController.GetRawAxis(4),
+        auto leftYAxis =
+            MathUtilNK::calculateAxis(m_driverController.GetRawAxis(0),
                                       DriveConstants::kDefaultAxisDeadband);
+        auto rightXAxis =
+            MathUtilNK::calculateAxis(m_driverController.GetRawAxis(2),
+                                      DriveConstants::kDefaultAxisDeadband);
+        frc::SmartDashboard::PutNumber("Joystick/Left X Axis", leftXAxis);
+        frc::SmartDashboard::PutNumber("Joystick/Left Y Axis", leftYAxis);
+        frc::SmartDashboard::PutNumber("Joystick/Right X Axis", rightXAxis);
         m_swerveDrive.Drive(frc::ChassisSpeeds::FromFieldRelativeSpeeds(
-            leftXAxis * DriveConstants::kMaxTranslationalVelocity,
-            leftYAxis * DriveConstants::kMaxTranslationalVelocity,
-            rightXAxis * DriveConstants::kMaxRotationalVelocity,
+            -leftXAxis * DriveConstants::kMaxTranslationalVelocity,
+            units::meters_per_second_t{0},
+            units::radians_per_second_t{0},
+            // -leftYAxis * DriveConstants::kMaxTranslationalVelocity,
+            // -rightXAxis * DriveConstants::kMaxRotationalVelocity,
             m_swerveDrive.GetHeading()));
       },
       {&m_swerveDrive}));
@@ -106,6 +114,8 @@ void Robot::CreateRobot() {
   // Configure the button bindings
   BindCommands();
   m_swerveDrive.ResetHeading();
+
+  frc::SmartDashboard::PutNumber("Voltage", 0.0);
 }
 
 /**
